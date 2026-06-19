@@ -14,6 +14,7 @@ using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Common;
 using ECommons.Reflection;
 using Dalamud.Interface.Utility;
+using ECommons.LanguageHelpers;
 
 namespace JustBackup;
 
@@ -31,6 +32,7 @@ public unsafe class JustBackup : IDalamudPlugin
     {
         P = this;
         ECommonsMain.Init(pluginInterface, this);
+        Localization.Init("Chinese");
         PatreonBanner.IsOfficialPlugin = () => true;
         config = Svc.PluginInterface.GetPluginConfig() as Config ?? new Config();
         windowSystem = new();
@@ -43,7 +45,7 @@ public unsafe class JustBackup : IDalamudPlugin
         Svc.PluginInterface.UiBuilder.OpenConfigUi += delegate { configWindow.IsOpen = true; };
         Svc.Commands.AddHandler("/justbackup", new Dalamud.Game.Command.CommandInfo(delegate { DoBackup(true); })
         {
-            HelpMessage = "do a manual backup"
+            HelpMessage = "do a manual backup".Loc()
         });
         InternalLog.Debug($"Processor count: {Environment.ProcessorCount}");
     }
@@ -68,7 +70,7 @@ public unsafe class JustBackup : IDalamudPlugin
         {
             if(DateTimeOffset.Now.ToUnixTimeMilliseconds() - config.LastSuccessfulBackup < config.MinIntervalBetweenBackups * 60 * 1000)
             {
-                Notify.Info($"Backup skipped because {config.MinIntervalBetweenBackups} minutes did not passed yet since last backup");
+                Notify.Info("Backup skipped because ?? minutes did not passed yet since last backup".Loc(config.MinIntervalBetweenBackups));
                 return;
             }
         }
@@ -142,7 +144,7 @@ public unsafe class JustBackup : IDalamudPlugin
             catch (Exception e)
             {
                 PluginLog.Error($"Can't back up plugin configurations: {e.Message}\n{e.StackTrace ?? ""}");
-                Svc.PluginInterface.UiBuilder.AddNotification("Error creating plugin configuration backup:\n" + e.Message, this.Name, NotificationType.Error);
+                Svc.PluginInterface.UiBuilder.AddNotification("Error creating plugin configuration backup:\n".Loc() + e.Message, this.Name, NotificationType.Error);
             }
         }
         var daysToKeep = TimeSpan.FromDays(config.DaysToKeep);
@@ -344,7 +346,7 @@ public unsafe class JustBackup : IDalamudPlugin
                 }
                 if (pluginSuccess && gameSuccess)
                 {
-                    Notify.Success("Backup created successfully!");
+                    Notify.Success("Backup created successfully!".Loc());
                     new TickScheduler(() =>
                     {
                         config.LastSuccessfulBackup = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -353,13 +355,13 @@ public unsafe class JustBackup : IDalamudPlugin
                 }
                 else
                 {
-                    Notify.Warning("There were errors while creating backup, please check log");
+                    Notify.Warning("There were errors while creating backup, please check log".Loc());
                 }
             }
             catch(Exception ex)
             {
                 PluginLog.Error($"Error creating backup: {ex.Message}\n{ex.StackTrace ?? ""}");
-                Notify.Error("Could not create backup:\n" + ex.Message);
+                Notify.Error("Could not create backup:\n".Loc() + ex.Message);
             }
             try
             {
@@ -368,7 +370,7 @@ public unsafe class JustBackup : IDalamudPlugin
             catch (Exception ex)
             {
                 PluginLog.Error($"Error deleting temp files: {ex.Message}\n{ex.StackTrace ?? ""}");
-                Notify.Error("Error deleting temp files:\n" + ex.Message);
+                Notify.Error("Error deleting temp files:\n".Loc() + ex.Message);
             }
             if(loweredPrio)
             {

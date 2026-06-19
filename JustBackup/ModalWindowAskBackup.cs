@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface.Utility;
 using ECommons;
 using ECommons.Logging;
+using ECommons.LanguageHelpers;
 using System.Diagnostics;
 using System.IO;
 
@@ -8,7 +9,7 @@ namespace JustBackup;
 
 internal class ModalWindowAskBackup : Window
 {
-    public ModalWindowAskBackup() : base("JustBackup - another instance is already running", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize, true)
+    public ModalWindowAskBackup() : base("JustBackup - another instance is already running".Loc(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize, true)
     {
         this.IsOpen = false;
         this.RespectCloseHotkey = false;
@@ -17,8 +18,8 @@ internal class ModalWindowAskBackup : Window
 
     public override void Draw()
     {
-        ImGuiEx.Text($"Another backup is already in progress. \nAttempting to create new backup while old \n  is not yet finished may result both backups not being done properly.");
-        if (ImGui.Button($"Force stop old backup and create new backup"))
+        ImGuiEx.Text("Another backup is already in progress. \nAttempting to create new backup while old \n  is not yet finished may result both backups not being done properly.".Loc());
+        if (ImGui.Button("Force stop old backup and create new backup".Loc()))
         {
             try
             {
@@ -37,14 +38,14 @@ internal class ModalWindowAskBackup : Window
             catch(Exception ex )
             {
                 ex.Log();
-                Notify.Error("Could not terminate old backup");
+                Notify.Error("Could not terminate old backup".Loc());
             }
         }
-        if(ImGui.Button($"Don't start new backup and let old backup finish"))
+        if(ImGui.Button("Don't start new backup and let old backup finish".Loc()))
         {
             this.IsOpen = false;
         }
-        if(ImGui.Button($"(not recommended) Run new backup anyway"))
+        if(ImGui.Button("(not recommended) Run new backup anyway".Loc()))
         {
             (ECommonsMain.Instance as JustBackup).DoBackupInternal();
             this.IsOpen = false;
