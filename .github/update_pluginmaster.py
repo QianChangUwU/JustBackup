@@ -9,33 +9,35 @@ json_path = os.path.join(repo_path, 'pluginmaster.json')
 with open(json_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
-entry = data[0] if data else {}
-
 download_url = f"https://github.com/{repo_full_name}/releases/download/v{version}/JustBackup.zip"
 
-entry['Name'] = 'JustBackup'
-entry['Author'] = 'NightmareXIV, QianChangUwU'
-entry['Punchline'] = '自动备份游戏和插件配置。'
-entry['Description'] = '在游戏/插件启动时自动备份你的游戏和插件配置，支持自动清理旧备份、7-zip压缩、角色配置识别等。'
-entry['InternalName'] = 'JustBackup'
-entry['AssemblyVersion'] = version
-entry['TestingAssemblyVersion'] = version
-entry['DalamudApiLevel'] = 15
-entry['TestingDalamudApiLevel'] = 15
-entry['DownloadLinkInstall'] = download_url
-entry['DownloadLinkUpdate'] = download_url
-entry['DownloadLinkTesting'] = download_url
-entry['RepoUrl'] = f'https://github.com/{repo_full_name}'
-entry['Tags'] = ['backup', 'utility', 'cn']
-entry['ApplicableVersion'] = 'any'
-entry['LoadPriority'] = 0
-entry['AcceptsFeedback'] = True
-entry['LastUpdate'] = int(time.time())
+entry = {
+    'Name': 'JustBackup',
+    'Author': 'NightmareXIV, QianChangUwU',
+    'Punchline': '自动备份游戏和插件配置。',
+    'Description': '在游戏/插件启动时自动备份你的游戏和插件配置，支持自动清理旧备份、7-zip压缩、角色配置识别等。',
+    'InternalName': 'JustBackup',
+    'AssemblyVersion': version,
+    'TestingAssemblyVersion': version,
+    'DalamudApiLevel': 15,
+    'TestingDalamudApiLevel': 15,
+    'DownloadLinkInstall': download_url,
+    'DownloadLinkUpdate': download_url,
+    'DownloadLinkTesting': download_url,
+    'RepoUrl': f'https://github.com/{repo_full_name}',
+    'IconUrl': download_url,
+    'Tags': ['backup', 'utility', 'cn'],
+    'ApplicableVersion': 'any',
+    'LoadPriority': 0,
+    'AcceptsFeedback': True,
+    'LastUpdate': int(time.time()),
+}
 
-if not data:
-    data = [entry]
+idx = next((i for i, e in enumerate(data) if e.get('InternalName') == 'JustBackup'), -1)
+if idx >= 0:
+    data[idx] = entry
 else:
-    data[0] = entry
+    data.append(entry)
 
 with open(json_path, 'w', encoding='utf-8') as f:
     json.dump(data, f, indent=4, ensure_ascii=False)
