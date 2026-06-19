@@ -26,11 +26,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="7zr.exe">
+		<Content Include="7zr.exe">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="How to restore a backup.url">
+		</Content>
+		<Content Include="How to restore a backup.url">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
+		</Content>
+		<Content Include="LanguageChinese.ini">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 </Project>
