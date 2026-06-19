@@ -5,7 +5,7 @@
 		<!-- Version scheme: A.B.C.DEE
 		     A.B.C.D = upstream version from NightmareXIV/JustBackup
 		     EE = downstream patch counter (00~99), resets to 00 per upstream D bump -->
-		<Version>1.1.1.501</Version>
+		<Version>1.1.1.502</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
