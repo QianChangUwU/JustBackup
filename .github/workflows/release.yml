@@ -143,3 +143,26 @@ jobs:
             release/*
           draft: false
           prerelease: false
+
+      - name: Publish to DalamudPlugins repo
+        uses: actions/checkout@v4
+        with:
+          repository: QianChangUwU/DalamudPlugins
+          token: ${{ secrets.PLUGIN_REPO_TOKEN }}
+          path: dalamud-plugins
+
+      - name: Update pluginmaster.json
+        run: |
+          python3 .github/update_pluginmaster.py \
+            dalamud-plugins \
+            "${{ env.VERSION }}" \
+            "${{ github.repository }}"
+
+      - name: Commit and push to DalamudPlugins
+        run: |
+          cd dalamud-plugins
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add pluginmaster.json
+          git diff --cached --quiet || git commit -m "Update JustBackup to v${VERSION}"
+          git push
